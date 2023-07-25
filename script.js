@@ -2,6 +2,9 @@
 let firstNumber;
 let secondNumber;
 let operator;
+//Display values
+let topValue;
+let bottomValue;
 
 
 

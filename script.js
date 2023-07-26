@@ -62,20 +62,32 @@ function equalButtonHandler() {
     displayBottom.textContent = bottomValue;
 }
 
+const operators = {
+    '+': add,
+    '-': subtract,
+    '×': multiply,
+    '÷': divide
+}
+
 //Operate function. Take first and second number and operate accordingly.
 function operate(num1, num2, operator) {
-    switch (operator) {
-        case '+':
-            return add(num1, num2);
-        case '-':
-            return subtract(num1, num2);
-        case '×':
-            return multiply(num1, num2);
-        case '÷':
-            return multiply(num1, num2);
-        default:
-            break;
-    }
+    // switch (operator) {
+    //     case '+':
+    //         return add(num1, num2);
+    //     case '-':
+    //         return subtract(num1, num2);
+    //     case '×':
+    //         return multiply(num1, num2);
+    //     case '÷':
+    //         return divide(num1, num2);
+    //     default:
+    //         break;
+    // }
+    console.log(operator);
+    const operateFunction = operators[operator];
+    console.log(operateFunction);
+    console.log(operateFunction(num1, num2));
+    return operateFunction(num1, num2);
 }
 
 ///////////Operations/////////////

@@ -80,12 +80,13 @@ body {
     scale: 105%;
 }
 
-.button:active {
+.button:active, .button.active {
     border-color: #8d8d8d;
     scale: 95%;
+    background-color: #757575;
 }
 
-#equal {
+#equal-btn {
     flex-grow: 6;
 }
 

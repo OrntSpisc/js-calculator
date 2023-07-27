@@ -12,6 +12,8 @@ let firstNumber = "";
 let secondNumber = "";
 let operator;
 let operated = false;
+let canAddOperator = true;
+let canAddDecimal = true;
 //Display values
 let topValue = "0";
 let bottomValue = "";
@@ -35,29 +37,39 @@ deleteButton.addEventListener('click', deleteButtonHandler);
 //Buttons Handlers
 function numberButtonHandler(e) {
     //If zero clean display first
-    if (topValue === "0") {
-        topValue = "";
+    if (displayTop.textContent === "0") {
+        displayTop.textContent = "";
     }
-    topValue += e.target.id;
-    displayTop.textContent = topValue;
-
+    displayTop.textContent += e.target.id;
+    canAddOperator = true;
     //Put the inputted number according to the operation status
     if (operated) {
-        secondNumber += e.target.id;
+        secondNumber == 0 ? secondNumber = "" : null;
+        secondNumber += `${e.target.id}`;
     } else {
-        firstNumber += e.target.id;
+        firstNumber += `${e.target.id}`;
     }
 }
 
 function operatorButtonHandler(e) {
     operator = e.target.textContent;
-    topValue += ` ${e.target.textContent} `;
-    displayTop.textContent = topValue;
-    operated = true;
+    if (canAddOperator) {
+        if (!operated) {
+            firstNumber = parseInt(displayTop.textContent);
+        } else {
+            if (secondNumber) {
+                equalButtonHandler();
+            }
+        }
+        displayTop.textContent += ` ${e.target.textContent} `;
+        operated = true;
+        canAddOperator = false;
+    }
 }
 
 function deleteButtonHandler() {
     let deleted = topValue.substring(0, topValue.length - 1);
+    deleted.trimEnd();
     console.log(deleted);
     topValue = deleted;
     console.log(topValue);
@@ -68,15 +80,11 @@ function deleteButtonHandler() {
 }
 
 function equalButtonHandler() {
-    console.log("equal");
-    firstNumber = parseInt(firstNumber);
-    secondNumber = parseInt(secondNumber);
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
-    bottomValue = operate(firstNumber, secondNumber, operator);
-    firstNumber = bottomValue;
-    secondNumber = "";
-    operated = false;
-    displayBottom.textContent = bottomValue;
+    const result = operate(parseInt(firstNumber), parseInt(secondNumber), operator);
+    firstNumber = result;
+    secondNumber = 0;
+    displayBottom.textContent = result;
 }
 
 //Operate function. Take first and second number and operate accordingly.
@@ -90,8 +98,6 @@ const operators = {
 function operate(num1, num2, operator) {
     console.log(operator);
     const operateFunction = operators[operator];
-    console.log(operateFunction);
-    console.log(operateFunction(num1, num2));
     return operateFunction(num1, num2);
 }
 
@@ -119,7 +125,6 @@ function divide(num1, num2) {
 window.addEventListener('keydown', keyboardHandler);
 
 function keyboardHandler(e) {
-    console.log(e.key);
     let clickedButton;
     if (e.key == 'c') {
         clickedButton = allClearButton;

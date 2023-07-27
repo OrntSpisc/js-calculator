@@ -29,10 +29,10 @@ allClearButton.addEventListener('click', function() {
 numberButtons.forEach(button => button.addEventListener('click', e => numberButtonHandler(e)));
 operatorButtons.forEach(button => button.addEventListener('click', e => operatorButtonHandler(e)));
 equalButton.addEventListener('click', equalButtonHandler);
+deleteButton.addEventListener('click', deleteButtonHandler);
 
 
-
-//Handle number buttons press
+//Buttons Handlers
 function numberButtonHandler(e) {
     //If zero clean display first
     if (topValue === "0") {
@@ -40,16 +40,30 @@ function numberButtonHandler(e) {
     }
     topValue += e.target.id;
     displayTop.textContent = topValue;
+
+    //Put the inputted number according to the operation status
     if (operated) {
         secondNumber += e.target.id;
     } else {
         firstNumber += e.target.id;
     }
 }
+
 function operatorButtonHandler(e) {
     operator = e.target.textContent;
-    operated = true;
     topValue += ` ${e.target.textContent} `;
+    displayTop.textContent = topValue;
+    operated = true;
+}
+
+function deleteButtonHandler() {
+    let deleted = topValue.substring(0, topValue.length - 1);
+    console.log(deleted);
+    topValue = deleted;
+    console.log(topValue);
+    if (topValue == "") {
+        topValue = "0";
+    }
     displayTop.textContent = topValue;
 }
 
@@ -59,9 +73,13 @@ function equalButtonHandler() {
     secondNumber = parseInt(secondNumber);
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
     bottomValue = operate(firstNumber, secondNumber, operator);
+    firstNumber = bottomValue;
+    secondNumber = "";
+    operated = false;
     displayBottom.textContent = bottomValue;
 }
 
+//Operate function. Take first and second number and operate accordingly.
 const operators = {
     '+': add,
     '-': subtract,
@@ -69,20 +87,7 @@ const operators = {
     '÷': divide
 }
 
-//Operate function. Take first and second number and operate accordingly.
 function operate(num1, num2, operator) {
-    // switch (operator) {
-    //     case '+':
-    //         return add(num1, num2);
-    //     case '-':
-    //         return subtract(num1, num2);
-    //     case '×':
-    //         return multiply(num1, num2);
-    //     case '÷':
-    //         return divide(num1, num2);
-    //     default:
-    //         break;
-    // }
     console.log(operator);
     const operateFunction = operators[operator];
     console.log(operateFunction);

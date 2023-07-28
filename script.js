@@ -67,15 +67,18 @@ function operatorButtonHandler(e) {
 }
 
 function deleteButtonHandler() {
-    let deleted = topValue.substring(0, topValue.length - 1);
-    deleted.trimEnd();
+    let deleted = displayTop.textContent.substring(0, displayTop.textContent.length - 1);
+    deleted = deleted.trimEnd();
     console.log(deleted);
-    topValue = deleted;
-    console.log(topValue);
-    if (topValue == "") {
-        topValue = "0";
+    if (deleted == "") {
+        deleted = "0";
     }
-    displayTop.textContent = topValue;
+    displayTop.textContent = deleted;
+    if (!operated) {
+        firstNumber = firstNumber.substring(0, firstNumber.length - 1);
+    } else {
+        secondNumber = secondNumber.substring(0, secondNumber.length - 1);
+    }
 }
 
 function equalButtonHandler() {

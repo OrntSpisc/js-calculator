@@ -1,3 +1,10 @@
+//
+//
+// Warning messy code!!!
+// Read with safety gears and always follow the protocols!!!
+//
+//
+
 //Selectors
 const displayTop = document.querySelector('.small-display');
 const displayBottom = document.querySelector('.big-display');
@@ -10,6 +17,8 @@ const buttons = document.querySelectorAll('button');
 //Calculator variables
 let firstNumber = "";
 let secondNumber = "";
+let pastFirstNumber = "";
+let pastSecondNumber = "";
 let operator;
 let operated = false;
 let canAddOperator = true;
@@ -47,6 +56,7 @@ function numberButtonHandler(e) {
         secondNumber == 0 ? secondNumber = "" : null;
         secondNumber += `${e.target.id}`;
     } else {
+        secondNumber == 0 ? secondNumber = "" : null;
         firstNumber += `${e.target.id}`;
     }
 }
@@ -56,6 +66,8 @@ function operatorButtonHandler(e) {
         if (!operated) {
             firstNumber = parseInt(displayTop.textContent);
         } else {
+            pastFirstNumber = firstNumber;
+            pastSecondNumber = secondNumber;
             firstNumber = equalButtonHandler();
             secondNumber = 0;
         }
@@ -67,22 +79,38 @@ function operatorButtonHandler(e) {
 }
 
 function deleteButtonHandler() {
-    let deleted = displayTop.textContent.substring(0, displayTop.textContent.length - 1);
-    deleted = deleted.trimEnd();
-    console.log(deleted);
-    if (deleted == "") {
-        deleted = "0";
+    let newString = displayTop.textContent.substring(0, displayTop.textContent.length - 1);
+    const deletedChar = displayTop.textContent.charAt(displayTop.textContent.length - 1);
+    newString = newString.trimEnd();
+    console.log(newString);
+    if (newString == "") {
+        newString = "0";
     }
-    displayTop.textContent = deleted;
+    const keys = Object.keys(operators);
+
+    
+    displayTop.textContent = newString;
     if (!operated) {
         firstNumber = firstNumber.substring(0, firstNumber.length - 1);
     } else {
-        secondNumber = secondNumber.substring(0, secondNumber.length - 1);
+        secondNumber = secondNumber.toString().substring(0, secondNumber.length - 1);
+        if (keys.includes(deletedChar)) {
+            firstNumber = pastFirstNumber;
+            secondNumber = pastSecondNumber;
+            if (!Object.keys(operators).some(v => newString.includes(v))) {
+                operated = false;
+                firstNumber = displayTop.textContent;
+                secondNumber = "";
+            }
+        }
     }
+    equalButtonHandler();
 }
 
 function equalButtonHandler() {
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
+    firstNumber == "" ? firstNumber = 0 : null;
+    secondNumber == "" ? secondNumber = 0 : null;
     const result = operate(parseInt(firstNumber), parseInt(secondNumber), operator);
     displayBottom.textContent = result;
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
@@ -96,6 +124,7 @@ const operators = {
     '×': multiply,
     '÷': divide
 }
+
 
 function operate(num1, num2, operator) {
     console.log(operator);

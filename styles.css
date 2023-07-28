@@ -29,12 +29,19 @@ body {
 }
 
 .display {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: #757575;
     border-radius: 8px;
     height: 100px;
     width: 100%;
     margin-bottom: 24px;
     text-align: end;
+    flex: 1 0 auto;
+    overflow: auto;
+
+    
 }
 
 .big-display {

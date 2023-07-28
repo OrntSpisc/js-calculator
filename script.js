@@ -52,16 +52,15 @@ function numberButtonHandler(e) {
 }
 
 function operatorButtonHandler(e) {
-    operator = e.target.textContent;
     if (canAddOperator) {
         if (!operated) {
             firstNumber = parseInt(displayTop.textContent);
         } else {
-            if (secondNumber) {
-                equalButtonHandler();
-            }
+            firstNumber = equalButtonHandler();
+            secondNumber = 0;
         }
         displayTop.textContent += ` ${e.target.textContent} `;
+        operator = e.target.textContent;
         operated = true;
         canAddOperator = false;
     }
@@ -82,9 +81,9 @@ function deleteButtonHandler() {
 function equalButtonHandler() {
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
     const result = operate(parseInt(firstNumber), parseInt(secondNumber), operator);
-    firstNumber = result;
-    secondNumber = 0;
     displayBottom.textContent = result;
+    console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
+    return result;
 }
 
 //Operate function. Take first and second number and operate accordingly.

@@ -14,6 +14,8 @@ const allClearButton = document.querySelector('#all-clear');
 const equalButton = document.querySelector('#equal-btn');
 const deleteButton = document.querySelector('#delete-btn');
 const buttons = document.querySelectorAll('button');
+const percentButton = document.querySelector('.percent-btn');
+const decimalButton = document.querySelector('.decimal-btn');
 //Calculator variables
 let firstNumber = "";
 let secondNumber = "";
@@ -36,11 +38,14 @@ allClearButton.addEventListener('click', function() {
     firstNumber = "";
     secondNumber = "";
     operated = false
+    operator = null;
 });
 numberButtons.forEach(button => button.addEventListener('click', e => numberButtonHandler(e)));
 operatorButtons.forEach(button => button.addEventListener('click', e => operatorButtonHandler(e)));
 equalButton.addEventListener('click', equalButtonHandler);
 deleteButton.addEventListener('click', deleteButtonHandler);
+percentButton.addEventListener('click', percentButtonHandler);
+decimalButton.addEventListener('click', decimalButtonHandler);
 
 
 //Buttons Handlers
@@ -59,12 +64,14 @@ function numberButtonHandler(e) {
         secondNumber == 0 ? secondNumber = "" : null;
         firstNumber += `${e.target.id}`;
     }
+    console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
+
 }
 
 function operatorButtonHandler(e) {
     if (canAddOperator) {
         if (!operated) {
-            firstNumber = parseInt(displayTop.textContent);
+            firstNumber = parseFloat(displayTop.textContent);
         } else {
             pastFirstNumber = firstNumber;
             pastSecondNumber = secondNumber;
@@ -75,10 +82,16 @@ function operatorButtonHandler(e) {
         operator = e.target.textContent;
         operated = true;
         canAddOperator = false;
+        canAddDecimal = true;
     }
+    console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
+
 }
 
 function deleteButtonHandler() {
+    if (!firstNumber) {
+        return;
+    }
     let newString = displayTop.textContent.substring(0, displayTop.textContent.length - 1);
     const deletedChar = displayTop.textContent.charAt(displayTop.textContent.length - 1);
     newString = newString.trimEnd();
@@ -107,11 +120,38 @@ function deleteButtonHandler() {
     equalButtonHandler();
 }
 
+function decimalButtonHandler() {
+    if (canAddDecimal) {
+        displayTop.textContent += "."
+        if (!operated) {
+            firstNumber += ".";
+            console.log(firstNumber);
+        } else {
+            secondNumber += ".";
+            console.log(secondNumber);
+        }
+        canAddDecimal = false;
+    }
+}
+
+function percentButtonHandler() {
+    const splitted = displayTop.textContent.split(" ");
+    const percentedNumber = splitted.slice(-1);
+    percentedNumber[0] = `${parseFloat(percentedNumber) / 100}`;
+    splitted[splitted.length - 1] = percentedNumber;
+
+    displayTop.textContent = splitted.join(" ");
+    
+}
+
 function equalButtonHandler() {
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
     firstNumber == "" ? firstNumber = 0 : null;
     secondNumber == "" ? secondNumber = 0 : null;
-    const result = operate(parseInt(firstNumber), parseInt(secondNumber), operator);
+    let result = firstNumber;
+    if (operator) {
+        result = operate(parseFloat(firstNumber), parseFloat(secondNumber), operator);
+    }
     displayBottom.textContent = result;
     console.log(`${firstNumber}, ${secondNumber}, ${operator}`);
     return result;
